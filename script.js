@@ -103,29 +103,24 @@ document.getElementById("filter").addEventListener("change", function() {
 });
 
 // Afficher les stats selon le filtre sélectionné
-function displayStats(trainings) {
-    let filter = document.getElementById("filter").value;
-    let filteredData = {};
-    let now = new Date();
+function displayTrainings(trainings) {
+    let tbody = document.getElementById("trainingTable").getElementsByTagName("tbody")[0];
+    tbody.innerHTML = ""; // Effacer les anciennes entrées
 
     trainings.forEach(training => {
-        let date = new Date(training.date);
-        let label;
+        let row = tbody.insertRow();
+        row.insertCell(0).innerText = training.date;
+        row.insertCell(1).innerText = training.km;
+        row.insertCell(2).innerText = training.duration;
+        row.insertCell(3).innerText = training.difficulty;
 
-        if (filter === "week" && (now - date) / (1000 * 60 * 60 * 24) <= 7) {
-            label = "Cette semaine";
-        } else if (filter === "month" && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
-            label = "Ce mois";
-        } else if (filter === "year" && date.getFullYear() === now.getFullYear()) {
-            label = "Cette année";
-        } else {
-            return;
-        }
-
-        filteredData[label] = (filteredData[label] || 0) + training.km;
+        let deleteCell = row.insertCell(4);
+        let deleteButton = document.createElement("button");
+        deleteButton.innerText = "🗑️";
+        deleteButton.style.color = "red";
+        deleteButton.onclick = function() { deleteTraining(training.id); };
+        deleteCell.appendChild(deleteButton);
     });
-
-    updateChart(Object.keys(filteredData), Object.values(filteredData));
 }
 
 // Mettre à jour le graphique
@@ -140,4 +135,16 @@ function updateChart(labels, data) {
         },
         options: { responsive: true, maintainAspectRatio: false }
     });
+
+// Supprimer un entraînement
+function deleteTraining(id) {
+    let tx = db.transaction("trainings", "readwrite");
+    let store = tx.objectStore("trainings");
+    store.delete(id);
+
+    tx.oncomplete = function() {
+        loadTrainings(); // Recharge le tableau après suppression
+    };
+}
+
 }
