@@ -1,4 +1,4 @@
-// Ouvrir IndexedDB pour stocker les entraînements
+/// Ouvrir IndexedDB
 let db;
 const request = indexedDB.open("trainingsDB", 1);
 
@@ -12,15 +12,17 @@ request.onsuccess = function(event) {
     loadTrainings();
 };
 
-// Ajouter un entraînement
-document.getElementById("addTraining").addEventListener("click", () => {
-    let km = parseFloat(prompt("Nombre de kilomètres ?"));
-    let difficulty = prompt("Difficulté (n1 à n6) ?");
-    let notes = prompt("Notes supplémentaires ?");
-    let date = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+// Gérer le formulaire
+document.getElementById("trainingForm").addEventListener("submit", function(event) {
+    event.preventDefault();
 
-    if (km && difficulty) {
-        let training = { date, km, difficulty, notes };
+    let km = parseFloat(document.getElementById("km").value);
+    let duration = parseInt(document.getElementById("duration").value);
+    let difficulty = document.querySelector("input[name='difficulty']:checked").value;
+    let date = new Date().toISOString().split('T')[0];
+
+    if (km && duration) {
+        let training = { date, km, duration, difficulty };
 
         let tx = db.transaction("trainings", "readwrite");
         let store = tx.objectStore("trainings");
@@ -28,12 +30,13 @@ document.getElementById("addTraining").addEventListener("click", () => {
 
         tx.oncomplete = function() {
             alert("Entraînement ajouté !");
+            document.getElementById("trainingForm").reset();
             loadTrainings();
         };
     }
 });
 
-// Charger les entraînements et mettre à jour les stats
+// Charger les entraînements
 function loadTrainings() {
     let tx = db.transaction("trainings", "readonly");
     let store = tx.objectStore("trainings");
@@ -45,31 +48,46 @@ function loadTrainings() {
     };
 }
 
-// Affichage des stats sous forme de graphique
+// Affichage des statistiques avec filtre
+document.getElementById("filter").addEventListener("change", function() {
+    loadTrainings();
+});
+
+// Afficher les stats selon le filtre sélectionné
 function displayStats(trainings) {
-    let weeklyData = {};
-    let monthlyData = {};
+    let filter = document.getElementById("filter").value;
+    let filteredData = {};
+    let now = new Date();
 
     trainings.forEach(training => {
-        let [year, month, day] = training.date.split('-');
-        let week = `${year}-W${Math.ceil(day / 7)}`;
+        let date = new Date(training.date);
+        let label;
 
-        weeklyData[week] = (weeklyData[week] || 0) + training.km;
-        monthlyData[`${year}-${month}`] = (monthlyData[`${year}-${month}`] || 0) + training.km;
+        if (filter === "week" && (now - date) / (1000 * 60 * 60 * 24) <= 7) {
+            label = "Cette semaine";
+        } else if (filter === "month" && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
+            label = "Ce mois";
+        } else if (filter === "year" && date.getFullYear() === now.getFullYear()) {
+            label = "Cette année";
+        } else {
+            return;
+        }
+
+        filteredData[label] = (filteredData[label] || 0) + training.km;
     });
 
-    updateChart(Object.keys(weeklyData), Object.values(weeklyData), "weeklyChart");
-    updateChart(Object.keys(monthlyData), Object.values(monthlyData), "monthlyChart");
+    updateChart(Object.keys(filteredData), Object.values(filteredData));
 }
 
-// Mettre à jour un graphique
-function updateChart(labels, data, chartId) {
-    let ctx = document.getElementById(chartId).getContext("2d");
-    new Chart(ctx, {
+// Mettre à jour le graphique
+function updateChart(labels, data) {
+    let ctx = document.getElementById("statsChart").getContext("2d");
+    if (window.chart) window.chart.destroy();
+    window.chart = new Chart(ctx, {
         type: "bar",
         data: {
             labels: labels,
-            datasets: [{ label: "Kilomètres", data: data, backgroundColor: "blue" }]
+            datasets: [{ label: "Kilomètres parcourus", data: data, backgroundColor: "blue" }]
         },
         options: { responsive: true, maintainAspectRatio: false }
     });
