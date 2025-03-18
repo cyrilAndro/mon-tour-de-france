@@ -6,13 +6,22 @@
     <title>Mon Tour de France</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
 
     <h1>Mon Tour de France</h1>
     <canvas id="statsChart"></canvas>
 
-    <button id="addTraining">Ajouter un entraînement</button>
+    <!-- Graphique des entraînements hebdomadaires -->
+<canvas id="weeklyChart" width="400" height="200"></canvas>
+
+<!-- Graphique des entraînements mensuels -->
+<canvas id="monthlyChart" width="400" height="200"></canvas>
+
+<!-- Bouton pour ajouter un entraînement -->
+<button id="addTraining">Ajouter un entraînement</button>
 
     <script src="script.js"></script>
 </body>
