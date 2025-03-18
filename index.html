@@ -6,8 +6,7 @@
     <title>Mon Tour de France</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -15,15 +14,14 @@
 <table id="trainingTable">
     <thead>
         <tr>
-    <th>Date</th>
-    <th>Km</th>
-    <th>Durée (min)</th>
-    <th>Difficulté</th>
-    <th>Action</th> <!-- Nouvelle colonne -->
-</tr>
+            <th>Date</th>
+            <th>Km</th>
+            <th>Durée (min)</th>
+            <th>Difficulté</th>
+            <th>Action</th>
+        </tr>
     </thead>
     <tbody>
-        <!-- Les entrées seront ajoutées ici via JavaScript -->
     </tbody>
 </table>
 
@@ -34,51 +32,30 @@
 <h3>Total Annuel</h3>
 <p id="yearlyTotal"></p>
 
-    <h1>Mon Tour de France</h1>
-    <canvas id="statsChart"></canvas>
-
-    <!-- Graphique des entraînements hebdomadaires -->
-<canvas id="weeklyChart" width="400" height="200"></canvas>
-
-<!-- Graphique des entraînements mensuels -->
-<canvas id="monthlyChart" width="400" height="200"></canvas>
-
 <h2>Ajouter un entraînement</h2>
 <form id="trainingForm">
-    <label for="km">Nombre de kilomètres :</label><br>
-    <input type="number" id="km" required><br><br>
+    <label for="km">Nombre de kilomètres :</label>
+    <input type="number" id="km" required>
 
-    <label for="duration">Durée (minutes) :</label><br>
-    <input type="number" id="duration" required><br><br>
+    <label for="duration">Durée (minutes) :</label>
+    <input type="number" id="duration" required>
 
-    <label>Difficulté :</label><br>
+    <label>Difficulté :</label>
     <div id="difficulty">
-    <input type="checkbox" name="difficulty" value="n1"> n1
-    <input type="checkbox" name="difficulty" value="n2"> n2
-    <input type="checkbox" name="difficulty" value="n3"> n3
-    <input type="checkbox" name="difficulty" value="n4"> n4
-    <input type="checkbox" name="difficulty" value="n5"> n5
-    <input type="checkbox" name="difficulty" value="n6"> n6
-</div><br>
+        <input type="checkbox" name="difficulty" value="n1"> n1
+        <input type="checkbox" name="difficulty" value="n2"> n2
+        <input type="checkbox" name="difficulty" value="n3"> n3
+        <input type="checkbox" name="difficulty" value="n4"> n4
+        <input type="checkbox" name="difficulty" value="n5"> n5
+        <input type="checkbox" name="difficulty" value="n6"> n6
+    </div>
 
     <button type="submit">Ajouter</button>
 </form>
 
-<h2>Statistiques</h2>
-<label for="filter">Filtrer :</label>
-<select id="filter">
-    <option value="week">Semaine</option>
-    <option value="month">Mois</option>
-    <option value="year">Année</option>
-</select>
+<canvas id="statsChart"></canvas>
 
-<canvas id="statsChart" width="400" height="200"></canvas>
-
-<!-- Bouton pour ajouter un entraînement -->
-<button id="addTraining">Ajouter un entraînement</button>
-
-    <script src="script.js"></script>
-</body>
+<script src="script.js"></script>
 
 <script>
 if ('serviceWorker' in navigator) {
@@ -87,4 +64,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
+</body>
 </html>
