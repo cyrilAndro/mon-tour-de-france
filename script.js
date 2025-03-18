@@ -18,11 +18,14 @@ document.getElementById("trainingForm").addEventListener("submit", function(even
 
     let km = parseFloat(document.getElementById("km").value);
     let duration = parseInt(document.getElementById("duration").value);
-    let difficulty = document.querySelector("input[name='difficulty']:checked").value;
+    let difficulty = Array.from(document.querySelectorAll("input[name='difficulty']:checked"))
+                      .map(input => input.value)
+                      .join(", "); // Convertit la sélection en une chaîne séparée par des virgules
     let date = new Date().toISOString().split('T')[0];
 
     if (km && duration) {
-        let training = { date, km, duration, difficulty };
+        let training = { date, km, duration, difficulty }; // Enregistre plusieurs niveaux
+
 
         let tx = db.transaction("trainings", "readwrite");
         let store = tx.objectStore("trainings");

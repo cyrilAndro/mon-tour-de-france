@@ -40,3 +40,12 @@ canvas {
     max-height: 250px; /* Réduction de la hauteur du graphique */
     margin: 20px auto;
 }
+
+#difficulty input {
+    margin-right: 5px;
+}
+
+#difficulty label {
+    display: inline-block;
+    margin-right: 10px;
+}
