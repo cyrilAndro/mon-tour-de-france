@@ -37,5 +37,6 @@ button {
 
 canvas {
     max-width: 100%;
+    max-height: 250px; /* Réduction de la hauteur du graphique */
     margin: 20px auto;
 }
